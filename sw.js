@@ -1,10 +1,10 @@
 const CACHE_NAME = "quran-ai-v3";
 const STATIC_CACHE = [
-  "/",
-  "index.html",
-  "manifest.json",
-  "assets/icon-192.png",
-  "assets/icon-512.png"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./assets/icon-192.png",
+  "./assets/icon-512.png"
 ];
 
 // INSTALL
