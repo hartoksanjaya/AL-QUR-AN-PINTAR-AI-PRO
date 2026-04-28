@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AL QUR'AN PINTAR AI PRO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00c9a7">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
+
+body{
+background:#0f2027;
+color:white;
+overflow-x:hidden;
+}
+
+/* BACKGROUND */
+.stars,.bg-masjid,.bg-overlay{
+position:fixed;
+top:0;left:0;width:100%;height:100%;
+}
+
+.stars{
+z-index:-3;
+background:url('https://i.ibb.co/Yt3K8zF/stars.png');
+animation:starsMove 60s linear infinite;
+opacity:.4;
+}
+
+@keyframes starsMove{
+from{transform:translateY(0)}
+to{transform:translateY(-1000px)}
+}
+
+.bg-masjid{
+z-index:-2;
+background:url('https://i.ibb.co/2kRZ6xM/mosque-silhouette.png') no-repeat center bottom;
+background-size:cover;
+animation:gerakMasjid 40s ease-in-out infinite;
+opacity:.3;
+}
+
+@keyframes gerakMasjid{
+0%{background-position:center bottom}
+50%{background-position:center 20px}
+100%{background-position:center bottom}
+}
+
+.bg-overlay{
+z-index:-1;
+background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,.95));
+}
+
+/* NAVBAR */
+.navbar{
+position:sticky;top:0;
+padding:15px;
+display:flex;
+justify-content:space-between;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,.05);
+border-bottom:1px solid rgba(255,255,255,.1);
+z-index:99;
+}
+
+/* CONTAINER */
+.container{padding:15px}
+
+/* CARD */
+.card{
+padding:15px;
+margin:10px 0;
+border-radius:20px;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(10px);
+cursor:pointer;
+transition:.3s;
+}
+.card:hover{transform:scale(1.02);}
+
+/* AYAT */
+.ayat{
+margin-top:15px;
+padding:20px;
+border-radius:20px;
+background:rgba(0,0,0,.4);
+animation:fade .5s ease;
+}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+
+.arab{font-size:24px;text-align:right;margin-bottom:10px}
+.arti{opacity:.8}
+
+/* BUTTON */
+button{
+padding:10px 15px;
+margin:5px;
+border:none;
+border-radius:10px;
+background:#00c9a7;
+color:white;
+cursor:pointer;
+}
+
+/* SEARCH */
+.search{
+width:100%;
+padding:12px;
+border:none;
+border-radius:15px;
+margin-bottom:10px;
+}
+
+/* SELECT */
+select{
+padding:10px;
+border-radius:10px;
+border:none;
+margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div class="stars"></div>
+<div class="bg-masjid"></div>
+<div class="bg-overlay"></div>
+
+<!-- NAVBAR -->
+<div class="navbar">
+📖 AL QUR'AN AI PRO
+</div>
+
+<div class="container">
+<input class="search" placeholder="Cari ayat..." onkeyup="searchAyat()">
+
+<select onchange="changeQori(this.value)">
+<option value="ar.alafasy">Alafasy</option>
+<option value="ar.husary">Husary</option>
+<option value="ar.minshawi">Minshawi</option>
+</select>
+
+<div id="surahList"></div>
+<div id="ayatContainer"></div>
+
+</div>
+<script>
+
+// STATE
+let ayatList=[], currentAudio=null, autoplay=false, index=0;
+let qori="ar.alafasy";
+
+// LOAD SURAH
+fetch("https://api.alquran.cloud/v1/surah")
+.then(r=>r.json())
+.then(d=>{
+let html="";
+d.data.forEach(s=>{
+html+=`<div class="card" onclick="loadSurah(${s.number})">${s.number}. ${s.englishName}</div>`;
+});
+surahList.innerHTML=html;
+});
+
+// LOAD SURAH
+function loadSurah(n){
+fetch(`https://api.alquran.cloud/v1/surah/${n}/editions/quran-uthmani,id.indonesian`)
+.then(r=>r.json())
+.then(d=>{
+
+ayatList=d.data[0].ayahs;
+let indo=d.data[1].ayahs;
+
+let html=`
+<button onclick="startAuto()">▶ Auto</button>
+<button onclick="stopAuto()">⏹ Stop</button>
+<button onclick="resume()">🔖 Lanjut</button>
+`;
+
+ayatList.forEach((a,i)=>{
+html+=`
+<div class="ayat">
+<div class="arab">${a.text}</div>
+<div class="arti">${indo[i].text}</div>
+
+<button onclick="play(${i})">▶</button>
+<button onclick="bookmark(${i})">🔖</button>
+<button onclick="tafsir(${a.number})">📚</button>
+</div>
+`;
+});
+
+ayatContainer.innerHTML=html;
+
+setTimeout(()=>ayatContainer.scrollIntoView({behavior:"smooth"}),300);
+
+});
+}
+
+// PLAY
+function play(i){
+index=i;
+
+if(currentAudio){
+currentAudio.pause();
+currentAudio.currentTime=0;
+}
+
+let num=ayatList[i].number;
+currentAudio=new Audio(`https://cdn.islamic.network/quran/audio/128/${qori}/${num}.mp3`);
+currentAudio.play().catch(()=>{});
+
+currentAudio.onended=()=>{
+if(autoplay && index<ayatList.length-1){
+index++;
+scrollToAyat(index);
+play(index);
+}
+};
+}
+
+// AUTO
+function startAuto(){
+autoplay=true;
+index=0;
+play(index);
+}
+
+function stopAuto(){
+autoplay=false;
+if(currentAudio) currentAudio.pause();
+}
+
+// SCROLL
+function scrollToAyat(i){
+let el=document.querySelectorAll(".ayat")[i];
+if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+// BOOKMARK
+function bookmark(i){
+localStorage.setItem("last",i);
+alert("Tersimpan");
+}
+function resume(){
+let i=localStorage.getItem("last");
+if(i) play(parseInt(i));
+}
+
+// SEARCH
+function searchAyat(){
+let q=document.querySelector(".search").value.toLowerCase();
+document.querySelectorAll(".ayat").forEach(e=>{
+e.style.display=e.innerText.toLowerCase().includes(q)?"block":"none";
+});
+}
+
+// QORI
+function changeQori(v){ qori=v; }
+
+// TAFSIR
+function tafsir(n){
+fetch(`https://api.quran.sutanlab.id/tafsir/${n}`)
+.then(r=>r.json())
+.then(d=>alert(d.data.tafsir.id.kemenag.text.substring(0,400)));
+}
+
+// ==========================================
+// REGISTER SERVICE WORKER
+// ==========================================
+if ('servic-eWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js', {
+        scope: '/'
+      });
+      console.log('[PWA] Service Worker registered:', registration.scope);
+
+      // Auto update setiap 1 jam
+      setInterval(() => {
+        registration.update();
+      }, 60 * 60 * 1000);
+
+      // Detect update
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateNotification();
+          }
+        });
+      });
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        console.log('[PWA] New service worker activated');
+        window.location.reload();
+      });
+
+    } catch (error) {
+      console.error('[PWA] Service Worker registration failed:', error);
+    }
+  });
+}
+
+// ==========================================
+// CAPTURE INSTALL PROMPT
+// ==========================================
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log('[PWA] Install prompt captured');
+
+  setTimeout(() => {
+    showInstallButton();
+  }, 3000);
+});
+
+// ==========================================
+// TOMBOL INSTALL
+// ==========================================
+function showInstallButton() {
+  const existingBtn = document.getElementById('installBtn');
+  if (existingBtn) return;
+
+  const installBtn = document.createElement('button');
+  installBtn.id = 'installBtn';
+  installBtn.innerHTML = '📲 Install App';
+
+  installBtn.style.cssText = `
+    position: fixed; bottom: 80px; left: 20px; z-index: 1500;
+    background: linear-gradient(135deg, #D4AF37, #AA8C2C);
+    color: #0A0A0A; border: none; padding: 12px 20px; border-radius: 25px;
+    font-weight: 600; font-size: 0.85rem; cursor: pointer;
+    box-shadow: 0 5px 20px rgba(212,175,55,0.4);
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Poppins', sans-serif;
+  `;
+
+  installBtn.onclick = () => {
+    showInstallOptions();
+  };
+
+  document.body.appendChild(installBtn);
+
+  // Auto hide
+  setTimeout(() => {
+    installBtn.style.opacity = '0';
+    installBtn.style.transform = 'translateY(100px)';
+    installBtn.style.transition = 'all 0.5s ease';
+    setTimeout(() => installBtn.remove(), 500);
+  }, 30000);
+}
+
+// ==========================================
+// MODAL PILIHAN INSTALL
+// ==========================================
+function showInstallOptions() {
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `;
+
+  modal.innerHTML = `
+    <div style="
+      background:#111;
+      padding:20px;
+      border-radius:15px;
+      text-align:center;
+      width:90%;
+      max-width:300px;
+      font-family:'Poppins',sans-serif;
+      color:#fff;
+    ">
+      <h3 style="margin-bottom:15px;">Pilih Instalasi</h3>
+
+      <button id="pwaInstall" style="
+        width:100%; margin-bottom:10px;
+        padding:12px; border:none;
+        border-radius:10px;
+        background:#D4AF37; color:#000;
+        font-weight:bold;
+        cursor:pointer;
+      ">
+        📲 Install Langsung
+      </button>
+
+      <button id="playstoreInstall" style="
+        width:100%;
+        padding:12px;
+        border:none;
+        border-radius:10px;
+        background:#0f9d58;
+        color:#fff;
+        font-weight:bold;
+        cursor:pointer;
+      ">
+        ▶️ Play Store
+      </button>
+
+      <button id="closeModal" style="
+        margin-top:10px;
+        background:none;
+        border:none;
+        color:#aaa;
+        cursor:pointer;
+      ">Tutup</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // INSTALL PWA
+  document.getElementById('pwaInstall').onclick = async () => {
+    if (!deferredPrompt) {
+      showToast('Browser tidak mendukung install langsung');
+      return;
+    }
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      console.log('[PWA] User accepted install');
+      showToast('Aplikasi berhasil di-install! 🎉');
+    }
+
+    deferredPrompt = null;
+    modal.remove();
+  };
+
+  // PLAY STORE (GANTI LINK INI)
+  document.getElementById('playstoreInstall').onclick = () => {
+    window.open('https://play.google.com/store/apps/details?id=github.qtok.twa', '_blank');
+  };
+
+  // CLOSE
+  document.getElementById('closeModal').onclick = () => {
+    modal.remove();
+  };
+}
+
+// ==========================================
+// STATUS INSTALLED
+// ==========================================
+window.addEventListener('appinstalled', () => {
+  isPWAInstalled = true;
+  console.log('[PWA] App installed');
+  showToast('Terima kasih telah meng-install MERYSA! 💛');
+
+  const installBtn = document.getElementById('installBtn');
+  if (installBtn) installBtn.remove();
+});
+
+// ==========================================
+// UPDATE NOTIFICATION
+// ==========================================
+function showUpdateNotification() {
+  if (confirm('Versi baru tersedia! Refresh untuk update?')) {
+    navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
+  }
+}
+
+// ==========================================
+// ONLINE / OFFLINE STATUS
+// ==========================================
+window.addEventListener('online', () => {
+  showToast('Koneksi internet kembali! 🌐');
+});
+
+window.addEventListener('offline', () => {
+  showToast('Mode offline - Data tersimpan di perangkat 📴');
+});
+
+// ==========================================
+// PRECACHE
+// ==========================================
+if ('serviceWorker' in navigator && navigator.onLine) {
+  navigator.serviceWorker.ready.then((registration) => {
+    registration.active.postMessage({
+      type: 'CACHE_URLS',
+      urls: [
+        '/#products',
+        '/#hero'
+      ]
+    });
+  });
+}
+
+console.log('[PWA] QUR AN PINTAR PWA Ready');
+</script>
+
+</body>
+</html>
