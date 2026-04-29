@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>AL QUR'AN PINTAR AI PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Scheherazade+New&display=swap" rel="stylesheet">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -16,87 +17,74 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:Poppins}
 
 body{
-background:#0f2027;
-color:white;
-overflow-x:hidden;
+background:#f5e6c8;
+color:#2c2c2c;
+font-family: 'Scheherazade New', serif;
 }
 
-/* BACKGROUND */
-.stars,.bg-masjid,.bg-overlay{
-position:fixed;
-top:0;left:0;width:100%;height:100%;
-}
-
-.stars{
-z-index:-3;
-background:url('https://i.ibb.co/Yt3K8zF/stars.png');
-animation:starsMove 60s linear infinite;
-opacity:.4;
-}
-
-@keyframes starsMove{
-from{transform:translateY(0)}
-to{transform:translateY(-1000px)}
-}
-
-.bg-masjid{
-z-index:-2;
-background:url('https://i.ibb.co/2kRZ6xM/mosque-silhouette.png') no-repeat center bottom;
-background-size:cover;
-animation:gerakMasjid 40s ease-in-out infinite;
-opacity:.3;
-}
-
-@keyframes gerakMasjid{
-0%{background-position:center bottom}
-50%{background-position:center 20px}
-100%{background-position:center bottom}
-}
-
-.bg-overlay{
-z-index:-1;
-background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,.95));
-}
-
-/* NAVBAR */
-.navbar{
-position:sticky;top:0;
-padding:15px;
-display:flex;
-justify-content:space-between;
-backdrop-filter:blur(20px);
-background:rgba(255,255,255,.05);
-border-bottom:1px solid rgba(255,255,255,.1);
-z-index:99;
-}
-
-/* CONTAINER */
-.container{padding:15px}
-
-/* CARD */
-.card{
-padding:15px;
-margin:10px 0;
-border-radius:20px;
-background:rgba(255,255,255,.05);
-backdrop-filter:blur(10px);
-cursor:pointer;
-transition:.3s;
-}
-.card:hover{transform:scale(1.02);}
-
-/* AYAT */
-.ayat{
-margin-top:15px;
+/* CONTAINER KERTAS */
+.container{
+max-width:900px;
+margin:auto;
 padding:20px;
-border-radius:20px;
-background:rgba(0,0,0,.4);
-animation:fade .5s ease;
+background:#fff8e1;
+border:8px solid #d4af37;
+border-radius:15px;
+box-shadow:0 0 40px rgba(0,0,0,.2);
 }
-@keyframes fade{from{opacity:0;transform:translateY(10px)}}
 
-.arab{font-size:24px;text-align:right;margin-bottom:10px}
-.arti{opacity:.8}
+/* ORNAMEN ATAS */
+.container::before{
+content:"۞ Al Qur'an ۞";
+display:block;
+text-align:center;
+font-size:22px;
+margin-bottom:20px;
+color:#b8962e;
+}
+
+/* AYAT STYLE MUSHAF */
+.ayat{
+margin:20px 0;
+padding:20px;
+border-bottom:1px solid #e0d2a8;
+}
+
+/* ARAB */
+.arab{
+font-size:28px;
+line-height:2;
+text-align:right;
+font-family:'Scheherazade New', serif;
+}
+
+/* ARTI */
+.arti{
+margin-top:10px;
+font-size:14px;
+color:#555;
+font-style:italic;
+}
+
+/* NOMOR AYAT */
+.nomor{
+display:inline-block;
+border:2px solid #b8962e;
+border-radius:50%;
+padding:4px 10px;
+margin-left:10px;
+font-size:12px;
+color:#b8962e;
+}
+.navbar{
+background:#d4af37;
+color:#000;
+font-weight:bold;
+text-align:center;
+padding:15px;
+font-size:18px;
+letter-spacing:2px;
+}
 
 /* BUTTON */
 button{
@@ -108,14 +96,23 @@ background:#00c9a7;
 color:white;
 cursor:pointer;
 }
-
 /* SEARCH */
 .search{
-width:100%;
-padding:12px;
-border:none;
-border-radius:15px;
-margin-bottom:10px;
+width:90%;
+max-width:500px;
+display:block;
+margin:15px auto;
+padding:12px 15px;
+border-radius:20px;
+border:2px solid #d4af37;
+background:#fff8e1;
+font-family:'Scheherazade New', serif;
+font-size:14px;
+outline:none;
+}
+
+.search:focus{
+box-shadow:0 0 10px rgba(212,175,55,0.5);
 }
 
 /* SELECT */
@@ -124,6 +121,57 @@ padding:10px;
 border-radius:10px;
 border:none;
 margin-bottom:10px;
+}
+.card{
+background:#fff8e1;
+border:2px solid #d4af37;
+margin:10px;
+padding:12px;
+border-radius:12px;
+cursor:pointer;
+text-align:center;
+transition:.3s;
+}
+
+.card:hover{
+background:#f3e2b3;
+transform:scale(1.03);
+}
+/* PRIVACY POLICY LINK */
+.privacy-link{
+position:fixed;
+bottom:15px;
+right:15px;
+background:#b8962e;
+color:#000;
+padding:10px 14px;
+border-radius:20px;
+font-size:12px;
+text-decoration:none;
+font-weight:bold;
+box-shadow:0 4px 15px rgba(0,0,0,0.2);
+transition:all .3s ease;
+z-index:999;
+}
+
+/* HOVER */
+.privacy-link:hover{
+background:#d4af37;
+transform:translateY(-3px) scale(1.05);
+box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* KLIK */
+.privacy-link:active{
+transform:scale(0.95);
+}
+
+/* MOBILE */
+@media(max-width:600px){
+.privacy-link{
+font-size:11px;
+padding:8px 12px;
+}
 }
 </style>
 </head>
@@ -139,10 +187,9 @@ margin-bottom:10px;
 <div class="navbar">
 📖 AL QUR'AN AI PRO
 </div>
-  <a href="privacy-policy.html">Kebijakan Privasi</a>
-
 <div class="container">
-<input class="search" placeholder="Cari ayat..." onkeyup="searchAyat()">
+
+<input class="search" placeholder="🔍 Cari nama surah..." onkeyup="searchSurah()">
 
 <select onchange="changeQori(this.value)">
 <option value="ar.alafasy">Alafasy</option>
@@ -154,6 +201,7 @@ margin-bottom:10px;
 <div id="ayatContainer"></div>
 
 </div>
+<a href="privacy-policy.html" class="privacy-link">🔒 Kebijakan Privasi</a>
 <script>
 
 // STATE
@@ -189,7 +237,10 @@ let html=`
 ayatList.forEach((a,i)=>{
 html+=`
 <div class="ayat">
-<div class="arab">${a.text}</div>
+<div class="arab">
+${a.text}
+<span class="nomor">${a.numberInSurah}</span>
+</div>
 <div class="arti">${indo[i].text}</div>
 
 <button onclick="play(${i})">▶</button>
@@ -263,6 +314,38 @@ document.querySelectorAll(".ayat").forEach(e=>{
 e.style.display=e.innerText.toLowerCase().includes(q)?"block":"none";
 });
 }
+let surahData=[];
+
+fetch("https://api.alquran.cloud/v1/surah")
+.then(r=>r.json())
+.then(d=>{
+surahData = d.data;
+renderSurahList(surahData);
+});
+function renderSurahList(data){
+let html="";
+
+data.forEach(s=>{
+html+=`
+<div class="card" onclick="loadSurah(${s.number})">
+${s.number}. ${s.englishName} (${s.name})
+</div>
+`;
+});
+
+document.getElementById("surahList").innerHTML = html;
+}
+function searchSurah(){
+let q=document.querySelector(".search").value.toLowerCase();
+
+let filtered = surahData.filter(s =>
+s.englishName.toLowerCase().includes(q) ||
+s.name.toLowerCase().includes(q)
+);
+
+renderSurahList(filtered);
+}
+
 
 // QORI
 function changeQori(v){ qori=v; }
