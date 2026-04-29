@@ -67,6 +67,7 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;background:linear-gradien
 .sound-btn, .settings-btn{position:fixed;top:20px;z-index:100;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all 0.3s ease;color:#fff}
 .sound-btn{right:20px}.settings-btn{left:20px}
 .sound-btn:hover,.settings-btn:hover{background:rgba(255,255,255,0.15);transform:scale(1.1)}
+.sound-btn.error{background:rgba(255,60,60,0.3);border-color:rgba(255,60,60,0.5)}
 .notification{position:fixed;top:0;left:0;width:100%;padding:18px;background:linear-gradient(135deg,rgba(212,175,55,0.25),rgba(212,175,55,0.1));border-bottom:2px solid rgba(212,175,55,0.5);backdrop-filter:blur(20px);text-align:center;z-index:999;transform:translateY(-100%);transition:transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275)}
 .notification.show{transform:translateY(0)}
 .notification p{font-size:15px;font-weight:600;color:#d4af37}
@@ -118,7 +119,6 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;background:linear-gradien
     <div class="footer"><div class="footer-verse">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</div><div class="footer-text">Sesungguhnya sholat adalah kewajiban yang ditentukan waktunya</div></div>
 </div>
 
-<!-- Modal Pengaturan Wilayah Indonesia -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
         <div class="modal-title">⚙️ Pengaturan Wilayah Indonesia</div>
@@ -168,50 +168,94 @@ const prayerOrder = ['subuh','syuruq','dzuhur','ashar','maghrib','isya'];
 
 // Koordinat Kota-kota Besar Indonesia
 const idCities = {
-    jakarta: {lat: -6.2088, lng: 106.8456},
-    surabaya: {lat: -7.2575, lng: 112.7521},
-    bandung: {lat: -6.9175, lng: 107.6191},
-    semarang: {lat: -6.9667, lng: 110.4167},
-    yogyakarta: {lat: -7.7972, lng: 110.3688},
-    medan: {lat: 3.5952, lng: 98.6722},
-    padang: {lat: -0.9471, lng: 100.4172},
-    palembang: {lat: -2.9761, lng: 104.7754},
-    pekanbaru: {lat: 0.5071, lng: 101.4478},
-    makassar: {lat: -5.1477, lng: 119.4327},
-    manado: {lat: 1.4748, lng: 124.8421},
-    palu: {lat: -0.8917, lng: 119.8707},
-    pontianak: {lat: -0.0263, lng: 109.3425},
-    banjarmasin: {lat: -3.3194, lng: 114.5908},
-    denpasar: {lat: -8.4095, lng: 115.1889},
-    mataram: {lat: -8.5833, lng: 116.1167},
-    kupang: {lat: -10.1717, lng: 123.6074},
-    ambon: {lat: -3.6954, lng: 128.1814},
-    jayapura: {lat: -2.5337, lng: 140.7181},
-    sorong: {lat: -0.8623, lng: 131.2538}
+    jakarta: {lat: -6.2088, lng: 106.8456}, surabaya: {lat: -7.2575, lng: 112.7521},
+    bandung: {lat: -6.9175, lng: 107.6191}, semarang: {lat: -6.9667, lng: 110.4167},
+    yogyakarta: {lat: -7.7972, lng: 110.3688}, medan: {lat: 3.5952, lng: 98.6722},
+    padang: {lat: -0.9471, lng: 100.4172}, palembang: {lat: -2.9761, lng: 104.7754},
+    pekanbaru: {lat: 0.5071, lng: 101.4478}, makassar: {lat: -5.1477, lng: 119.4327},
+    manado: {lat: 1.4748, lng: 124.8421}, palu: {lat: -0.8917, lng: 119.8707},
+    pontianak: {lat: -0.0263, lng: 109.3425}, banjarmasin: {lat: -3.3194, lng: 114.5908},
+    denpasar: {lat: -8.4095, lng: 115.1889}, mataram: {lat: -8.5833, lng: 116.1167},
+    kupang: {lat: -10.1717, lng: 123.6074}, ambon: {lat: -3.6954, lng: 128.1814},
+    jayapura: {lat: -2.5337, lng: 140.7181}, sorong: {lat: -0.8623, lng: 131.2538}
 };
 
-let appState = {
-    times: {...defaultTimes},
-    city: 'jakarta',
-    method: 20,
-    lastTriggered: ''
-};
+let appState = { times: {...defaultTimes}, city: 'jakarta', method: 20, lastTriggered: '' };
 
-let audioCtx = null;
-function initAudio(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return true}catch(e){return false}}
-function playMelodicAdzan(){
-    if(!initAudio())return;
-    const now=audioCtx.currentTime;
-    const notes=[{f:392,s:0,d:1.5},{f:440,s:0.3,d:1.2},{f:523.25,s:0.6,d:1.8},{f:587.33,s:1.0,d:1.5},{f:523.25,s:1.5,d:1.0},{f:440,s:2.0,d:1.2},{f:392,s:2.5,d:1.5},{f:349.23,s:3.0,d:1.0},{f:329.63,s:3.3,d:1.5},{f:293.66,s:3.8,d:2.0},{f:587.33,s:6.0,d:1.8},{f:659.25,s:6.5,d:1.5},{f:587.33,s:7.0,d:1.2},{f:523.25,s:7.5,d:1.8},{f:440,s:8.2,d:1.0},{f:392,s:8.8,d:1.5},{f:440,s:9.5,d:2.5},{f:523.25,s:12.5,d:2.0},{f:587.33,s:13.5,d:3.0}];
-    notes.forEach(n=>{
-        const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(n.f,now+n.s);
-        g.gain.setValueAtTime(0,now+n.s);g.gain.linearRampToValueAtTime(0.25,now+n.s+0.1);g.gain.linearRampToValueAtTime(0,now+n.s+n.d);
-        o.connect(g);g.connect(audioCtx.destination);o.start(now+n.s);o.stop(now+n.s+n.d);
-        const o2=audioCtx.createOscillator(),g2=audioCtx.createGain();o2.type='triangle';o2.frequency.setValueAtTime(n.f*2,now+n.s);
-        g2.gain.setValueAtTime(0,now+n.s);g2.gain.linearRampToValueAtTime(0.06,now+n.s+0.1);g2.gain.linearRampToValueAtTime(0,now+n.s+n.d);
-        o2.connect(g2);g2.connect(audioCtx.destination);o2.start(now+n.s);o2.stop(now+n.s+n.d);
-    });
+// ==================== AUDIO SYSTEM (FILE MP3 LOKAL) ====================
+let adzanAudio = null;
+let isAudioLoaded = false;
+const adzanBtn = document.getElementById('soundBtn');
+
+function initAudio() {
+    if (adzanAudio) return true;
+    try {
+        adzanAudio = new Audio('azan.mp3');
+        adzanAudio.preload = 'auto';
+        
+        adzanAudio.addEventListener('canplaythrough', function() {
+            isAudioLoaded = true;
+            adzanBtn.classList.remove('error');
+            adzanBtn.title = 'Test Suara Azan';
+            console.log('✅ File azan.mp3 berhasil dimuat');
+        }, {once: true});
+
+        adzanAudio.addEventListener('error', function(e) {
+            isAudioLoaded = false;
+            adzanBtn.classList.add('error');
+            adzanBtn.title = 'File azan.mp3 tidak ditemukan!';
+            console.warn('⚠️ Gagal memuat file azan.mp3. Pastikan file ada di folder yang sama.');
+        }, {once: true});
+
+        return true;
+    } catch (e) {
+        console.error('Audio init failed:', e);
+        return false;
+    }
 }
+
+function playAdzanSound() {
+    if (!adzanAudio) {
+        initAudio();
+        // Tunggu sebentar untuk inisialisasi
+        setTimeout(() => {
+            if (isAudioLoaded) playAdzanNow();
+        }, 200);
+        return;
+    }
+    
+    if (isAudioLoaded) {
+        playAdzanNow();
+    } else {
+        console.warn('File azan.mp3 belum siap dimuat');
+        // Coba load ulang
+        adzanAudio.src = 'azan.mp3';
+        adzanAudio.load();
+    }
+}
+
+function playAdzanNow() {
+    try {
+        // Hentikan suara jika sedang berjalan sebelumnya
+        adzanAudio.pause();
+        adzanAudio.currentTime = 0;
+        
+        const playPromise = adzanAudio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('🔊 Suara azan sedang diputar...');
+            }).catch(err => {
+                console.warn('Autoplay diblokir browser:', err);
+                console.log('💡 Klik tombol 🔔 untuk mengaktifkan audio manual');
+            });
+        }
+    } catch (e) {
+        console.error('Error playing adzan:', e);
+    }
+}
+// ======================================================================
+
 function showNotification(txt){document.getElementById('notifText').textContent=txt;document.getElementById('notification').classList.add('show');setTimeout(()=>hideNotification(),15000)}
 function hideNotification(){document.getElementById('notification').classList.remove('show')}
 function createParticles(){const c=document.getElementById('particles');c.innerHTML='';for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(8+Math.random()*12)+'s';p.style.animationDelay=Math.random()*10+'s';const sz=2+Math.random()*3;p.style.width=sz+'px';p.style.height=sz+'px';c.appendChild(p)}}
@@ -260,6 +304,7 @@ function updateClock(){
             else c.classList.remove('active');
         });
         
+        // Trigger otomatis saat detik 0
         const nowSec=w.getSeconds();
         for(const k of prayerOrder){
             if(cur===timeToMin(appState.times[k]) && nowSec===0){
@@ -273,7 +318,7 @@ function updateClock(){
 function onPrayerTime(k){
     const m=prayerMeta[k];
     showNotification(`🕌 ${m.name.toUpperCase()} - ${m.arabic} - Waktu sholat telah tiba!`);
-    if(initAudio())playMelodicAdzan();
+    playAdzanSound(); // Mainkan file MP3
     if(navigator.vibrate)navigator.vibrate([200,100,200,100,400]);
 }
 
@@ -319,7 +364,6 @@ document.getElementById('saveBtn').onclick=async function(){
     appState.method=selectedMethod;
     const c=idCities[selectedCity];
     
-    // Update UI location immediately
     const label=document.getElementById('citySelect').selectedOptions[0].text;
     document.getElementById('location').textContent=label.split(' (')[0];
     
@@ -327,7 +371,19 @@ document.getElementById('saveBtn').onclick=async function(){
     closeSettings();
 };
 
-document.getElementById('soundBtn').onclick=()=>{initAudio();playMelodicAdzan();showNotification('🔊 Test Suara Azan');setTimeout(hideNotification,5000)};
+// Tombol Test Audio
+document.getElementById('soundBtn').onclick=()=>{
+    initAudio(); // Pastikan audio terinisialisasi
+    if (isAudioLoaded) {
+        playAdzanSound();
+        showNotification('🔊 Test Suara Azan (azan.mp3)');
+        setTimeout(hideNotification, 5000);
+    } else {
+        adzanBtn.classList.add('error');
+        showNotification('⚠️ File azan.mp3 tidak ditemukan! Pastikan file ada di folder yang sama.');
+        setTimeout(hideNotification, 5000);
+    }
+};
 
 function init(){
     try{
@@ -342,7 +398,9 @@ function init(){
         }
         createParticles();renderCards();updateClock();setInterval(updateClock,1000);
         
-        // Auto fetch on load
+        // Preload audio saat init
+        initAudio();
+
         const c=idCities[appState.city];
         fetchTimes(c.lat, c.lng, appState.method);
     }catch(e){console.error('Init error:',e)}
@@ -351,6 +409,7 @@ function init(){
     }
 }
 
+// Enable audio context on first user interaction (untuk browser modern)
 document.addEventListener('click',function e(){initAudio();document.removeEventListener('click',e)},{once:true});
 document.addEventListener('touchstart',function e(){initAudio();document.removeEventListener('touchstart',e)},{once:true});
 
