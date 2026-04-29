@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waktu Sholat Indonesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;min-height:100vh;background:linear-gradient(135deg,#0c1220 0%,#1a1a3e 25%,#0d2137 50%,#1a1a3e 75%,#0c1220 100%);color:#fff;overflow-x:hidden;position:relative}
+.bg-particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;width:3px;height:3px;background:rgba(212,175,55,0.3);border-radius:50%;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) rotate(720deg);opacity:0}}
+.pattern-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-image:radial-gradient(circle at 20% 50%,rgba(212,175,55,0.03) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(0,180,216,0.05) 0%,transparent 50%),radial-gradient(circle at 40% 80%,rgba(212,175,55,0.04) 0%,transparent 50%);pointer-events:none;z-index:1}
+.container{position:relative;z-index:2;max-width:520px;margin:0 auto;padding:20px;min-height:100vh;padding-top:75px}
+.header{text-align:center;padding:15px 0}
+.mosque-icon{font-size:52px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 25px rgba(212,175,55,0.5));animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.bismillah{font-family:'Amiri',serif;font-size:26px;color:#d4af37;margin-bottom:4px;text-shadow:0 0 30px rgba(212,175,55,0.3)}
+.site-title{font-size:13px;font-weight:300;letter-spacing:6px;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.info-bar{display:flex;justify-content:center;gap:12px;margin:15px 0;flex-wrap:wrap}
+.info-item{display:flex;align-items:center;gap:8px;padding:9px 18px;background:rgba(255,255,255,0.05);border:1px solid rgba(212,175,55,0.15);border-radius:50px;backdrop-filter:blur(10px);cursor:pointer;transition:0.2s}
+.info-item:hover{background:rgba(255,255,255,0.1)}
+.info-item span{font-size:12px;color:rgba(255,255,255,0.7)}
+.info-item .icon{font-size:15px}
+.current-time-section{text-align:center;margin:15px 0;padding:25px;background:linear-gradient(145deg,rgba(212,175,55,0.1),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.2);border-radius:30px;backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.current-time-section::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(212,175,55,0.08),transparent,rgba(212,175,55,0.04),transparent);animation:rotateBg 12s linear infinite}
+@keyframes rotateBg{100%{transform:rotate(360deg)}}
+.current-time-content{position:relative;z-index:1}
+.current-time{font-size:60px;font-weight:800;background:linear-gradient(135deg,#d4af37,#f4e5a0,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;letter-spacing:-2px}
+.current-seconds{font-size:22px;font-weight:300;color:rgba(212,175,55,0.6);margin-left:4px}
+.current-period{font-size:16px;font-weight:400;color:rgba(212,175,55,0.8);margin-top:4px;letter-spacing:3px}
+.countdown-section{margin:15px 0;padding:20px;background:linear-gradient(145deg,rgba(0,180,216,0.15),rgba(0,150,180,0.05));border:1px solid rgba(0,180,216,0.25);border-radius:25px;backdrop-filter:blur(20px);text-align:center}
+.countdown-label{font-size:10px;text-transform:uppercase;letter-spacing:4px;color:rgba(0,180,216,0.8);margin-bottom:8px}
+.next-prayer-name{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}
+.countdown-timer{font-size:40px;font-weight:700;color:#00b4d8;font-variant-numeric:tabular-nums;letter-spacing:2px}
+.countdown-timer .separator{animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0.3}}
+.prayer-times{margin:20px 0}
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:5px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:18px}
+.prayer-card{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;margin-bottom:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;backdrop-filter:blur(15px);transition:all 0.3s ease;position:relative;overflow:hidden}
+.prayer-card::before{content:'';position:absolute;left:0;top:0;width:4px;height:100%;background:linear-gradient(180deg,transparent,rgba(212,175,55,0.5),transparent);opacity:0;transition:opacity 0.3s ease}
+.prayer-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(212,175,55,0.15);transform:translateX(6px)}
+.prayer-card:hover::before{opacity:1}
+.prayer-card.active{background:linear-gradient(145deg,rgba(212,175,55,0.15),rgba(212,175,55,0.05));border-color:rgba(212,175,55,0.4);box-shadow:0 8px 35px rgba(212,175,55,0.18);animation:activeGlow 2s ease-in-out infinite}
+@keyframes activeGlow{0%,100%{box-shadow:0 8px 35px rgba(212,175,55,0.15)}50%{box-shadow:0 8px 50px rgba(212,175,55,0.3)}}
+.prayer-card.active::before{opacity:1;background:linear-gradient(180deg,#d4af37,#f4e5a0,#d4af37);width:4px}
+.prayer-info{display:flex;align-items:center;gap:14px}
+.prayer-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)}
+.prayer-card.active .prayer-icon{background:linear-gradient(135deg,rgba(212,175,55,0.25),rgba(212,175,55,0.1));border-color:rgba(212,175,55,0.35)}
+.prayer-name{font-size:15px;font-weight:600;color:#fff}
+.prayer-arabic{font-family:'Amiri',serif;font-size:12px;color:rgba(255,255,255,0.4);margin-top:1px}
+.prayer-time{font-size:22px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.prayer-card.active .prayer-time{background:linear-gradient(135deg,#d4af37,#f4e5a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.prayer-badge{font-size:9px;padding:3px 10px;background:linear-gradient(135deg,#d4af37,#f4e5a0);color:#0c1220;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:inline-block}
+.progress-ring-container{display:flex;justify-content:center;margin:25px 0}
+.progress-ring-wrapper{position:relative;width:110px;height:110px}
+.progress-ring{transform:rotate(-90deg)}
+.progress-ring-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:6}
+.progress-ring-fill{fill:none;stroke:url(#goldGradient);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.progress-ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.progress-percent{font-size:26px;font-weight:800;background:linear-gradient(135deg,#d4af37,#f4e5a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.progress-label{font-size:8px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px}
+.footer{text-align:center;padding:25px 0;border-top:1px solid rgba(255,255,255,0.05)}
+.footer-verse{font-family:'Amiri',serif;font-size:15px;color:rgba(212,175,55,0.4);margin-bottom:8px;line-height:1.6}
+.footer-text{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px}
+.sound-btn, .settings-btn{position:fixed;top:20px;z-index:100;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all 0.3s ease;color:#fff}
+.sound-btn{right:20px}.settings-btn{left:20px}
+.sound-btn:hover,.settings-btn:hover{background:rgba(255,255,255,0.15);transform:scale(1.1)}
+.notification{position:fixed;top:0;left:0;width:100%;padding:18px;background:linear-gradient(135deg,rgba(212,175,55,0.25),rgba(212,175,55,0.1));border-bottom:2px solid rgba(212,175,55,0.5);backdrop-filter:blur(20px);text-align:center;z-index:999;transform:translateY(-100%);transition:transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275)}
+.notification.show{transform:translateY(0)}
+.notification p{font-size:15px;font-weight:600;color:#d4af37}
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);backdrop-filter:blur(5px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all 0.3s ease}
+.modal-overlay.active{opacity:1;visibility:visible}
+.modal{background:linear-gradient(145deg,#1a1a3e,#0c1220);border:1px solid rgba(212,175,55,0.2);border-radius:25px;padding:25px;width:90%;max-width:400px;transform:scale(0.9);transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);box-shadow:0 20px 50px rgba(0,0,0,0.5)}
+.modal-overlay.active .modal{transform:scale(1)}
+.modal-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:20px;color:#d4af37}
+.setting-row{margin-bottom:18px}
+.setting-label{font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:6px;display:block;letter-spacing:1px;text-transform:uppercase}
+.setting-input, .setting-select{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#fff;font-size:14px;outline:none;transition:0.2s}
+.setting-input:focus,.setting-select:focus{border-color:rgba(212,175,55,0.5);background:rgba(255,255,255,0.08)}
+.btn-row{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:12px;border:none;border-radius:12px;font-weight:600;cursor:pointer;transition:0.2s;font-size:14px}
+.btn-primary{background:linear-gradient(135deg,#d4af37,#b8942a);color:#0c1220}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(212,175,55,0.3)}
+.btn-secondary{background:rgba(255,255,255,0.1);color:#fff}
+.btn-secondary:hover{background:rgba(255,255,255,0.2)}
+.status-msg{font-size:11px;text-align:center;margin-top:10px;color:rgba(255,255,255,0.5);min-height:16px}
+.loading-spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top:2px solid #d4af37;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{100%{transform:rotate(360deg)}}
+@media(max-width:400px){.current-time{font-size:46px}.countdown-timer{font-size:30px}.prayer-time{font-size:19px}}
+.loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#0c1220;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.6s ease,visibility 0.6s ease}
+.loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.loading-spinner-lg{width:50px;height:50px;border:3px solid rgba(212,175,55,0.1);border-top:3px solid #d4af37;border-radius:50%;animation:spin 1s linear infinite}
+.loading-text{margin-top:18px;font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase}
+.glow-gold{position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.08) 0%,transparent 70%);pointer-events:none;z-index:0;top:-100px;right:-100px}
+.glow-blue{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,180,216,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;bottom:-150px;left:-150px}
+</style>
+</head>
+<body>
+<div class="loading-overlay" id="loading"><div class="loading-spinner-lg"></div><div class="loading-text">Memuat Jadwal...</div></div>
+<div class="notification" id="notification"><p id="notifText">🕌 Waktu Sholat Telah Tiba!</p></div>
+<button class="settings-btn" id="settingsBtn" title="Pilih Wilayah">⚙️</button>
+<button class="sound-btn" id="soundBtn" title="Test Suara Azan">🔔</button>
+<div class="bg-particles" id="particles"></div>
+<div class="pattern-overlay"></div><div class="glow-gold"></div><div class="glow-blue"></div>
+
+<div class="container">
+    <header class="header"><span class="mosque-icon">🕌</span><div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div><div class="site-title">Waktu Sholat Indonesia</div></header>
+    <div class="info-bar">
+        <div class="info-item" id="locationBtn"><span class="icon">📍</span><span id="location">Jakarta</span></div>
+        <div class="info-item"><span class="icon">📅</span><span id="date">-</span></div>
+    </div>
+    <div class="current-time-section"><div class="current-time-content"><div><span class="current-time" id="currentTime">00:00</span><span class="current-seconds" id="currentSeconds">00</span></div><div class="current-period" id="currentPeriod">WIB</div></div></div>
+    <div class="countdown-section"><div class="countdown-label">Menuju Waktu Sholat Berikutnya</div><div class="next-prayer-name" id="nextPrayerName">-</div><div class="countdown-timer" id="countdown">00:00:00</div></div>
+    <div class="progress-ring-container"><div class="progress-ring-wrapper"><svg class="progress-ring" width="110" height="110"><defs><linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4af37"/><stop offset="100%" stop-color="#f4e5a0"/></linearGradient></defs><circle class="progress-ring-bg" cx="55" cy="55" r="48"/><circle class="progress-ring-fill" id="progressRing" cx="55" cy="55" r="48" stroke-dasharray="301.593" stroke-dashoffset="301.593"/></svg><div class="progress-ring-text"><div class="progress-percent" id="progressPercent">0%</div><div class="progress-label">tersisa</div></div></div></div>
+    <div class="prayer-times"><div class="section-title">Jadwal Sholat Hari Ini</div><div id="prayerCards"></div></div>
+    <div class="footer"><div class="footer-verse">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</div><div class="footer-text">Sesungguhnya sholat adalah kewajiban yang ditentukan waktunya</div></div>
+</div>
+
+<!-- Modal Pengaturan Wilayah Indonesia -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-title">⚙️ Pengaturan Wilayah Indonesia</div>
+        <div class="setting-row">
+            <label class="setting-label">Pilih Kota / Wilayah</label>
+            <select class="setting-select" id="citySelect">
+                <option value="jakarta">Jakarta (DKI)</option>
+                <option value="surabaya">Surabaya (Jawa Timur)</option>
+                <option value="bandung">Bandung (Jawa Barat)</option>
+                <option value="semarang">Semarang (Jawa Tengah)</option>
+                <option value="yogyakarta">Yogyakarta (DIY)</option>
+                <option value="medan">Medan (Sumatera Utara)</option>
+                <option value="padang">Padang (Sumatera Barat)</option>
+                <option value="palembang">Palembang (Sumatera Selatan)</option>
+                <option value="pekanbaru">Pekanbaru (Riau)</option>
+                <option value="makassar">Makassar (Sulawesi Selatan)</option>
+                <option value="manado">Manado (Sulawesi Utara)</option>
+                <option value="palu">Palu (Sulawesi Tengah)</option>
+                <option value="pontianak">Pontianak (Kalimantan Barat)</option>
+                <option value="banjarmasin">Banjarmasin (Kalimantan Selatan)</option>
+                <option value="denpasar">Denpasar (Bali)</option>
+                <option value="mataram">Mataram (NTB)</option>
+                <option value="kupang">Kupang (NTT)</option>
+                <option value="ambon">Ambon (Maluku)</option>
+                <option value="jayapura">Jayapura (Papua)</option>
+                <option value="sorong">Sorong (Papua Barat)</option>
+            </select>
+        </div>
+        <div class="setting-row">
+            <label class="setting-label">Metode Hisab</label>
+            <select class="setting-select" id="methodSelect">
+                <option value="20">Kementerian Agama RI (Default)</option>
+                <option value="3">Umm al-Qura (Makkah)</option>
+                <option value="2">ISNA (Amerika Utara)</option>
+                <option value="13">Turki (Diyanet)</option>
+            </select>
+        </div>
+        <div class="status-msg" id="statusMsg"></div>
+        <div class="btn-row"><button class="btn btn-secondary" id="cancelBtn">Batal</button><button class="btn btn-primary" id="saveBtn">Terapkan & Perbarui</button></div>
+    </div>
+</div>
+
+<script>
+const defaultTimes = { subuh:"04:32", syuruq:"05:48", dzuhur:"11:52", ashar:"15:10", maghrib:"17:50", isya:"19:05" };
+const prayerMeta = { subuh:{name:"Subuh",arabic:"الفجر",icon:"🌅"}, syuruq:{name:"Syuruq",arabic:"الشروق",icon:"☀️"}, dzuhur:{name:"Dzuhur",arabic:"الظهر",icon:"🌤️"}, ashar:{name:"Ashar",arabic:"العصر",icon:"🌇"}, maghrib:{name:"Maghrib",arabic:"المغرب",icon:"🌅"}, isya:{name:"Isya",arabic:"العشاء",icon:"🌙"} };
+const prayerOrder = ['subuh','syuruq','dzuhur','ashar','maghrib','isya'];
+
+// Koordinat Kota-kota Besar Indonesia
+const idCities = {
+    jakarta: {lat: -6.2088, lng: 106.8456},
+    surabaya: {lat: -7.2575, lng: 112.7521},
+    bandung: {lat: -6.9175, lng: 107.6191},
+    semarang: {lat: -6.9667, lng: 110.4167},
+    yogyakarta: {lat: -7.7972, lng: 110.3688},
+    medan: {lat: 3.5952, lng: 98.6722},
+    padang: {lat: -0.9471, lng: 100.4172},
+    palembang: {lat: -2.9761, lng: 104.7754},
+    pekanbaru: {lat: 0.5071, lng: 101.4478},
+    makassar: {lat: -5.1477, lng: 119.4327},
+    manado: {lat: 1.4748, lng: 124.8421},
+    palu: {lat: -0.8917, lng: 119.8707},
+    pontianak: {lat: -0.0263, lng: 109.3425},
+    banjarmasin: {lat: -3.3194, lng: 114.5908},
+    denpasar: {lat: -8.4095, lng: 115.1889},
+    mataram: {lat: -8.5833, lng: 116.1167},
+    kupang: {lat: -10.1717, lng: 123.6074},
+    ambon: {lat: -3.6954, lng: 128.1814},
+    jayapura: {lat: -2.5337, lng: 140.7181},
+    sorong: {lat: -0.8623, lng: 131.2538}
+};
+
+let appState = {
+    times: {...defaultTimes},
+    city: 'jakarta',
+    method: 20,
+    lastTriggered: ''
+};
+
+let audioCtx = null;
+function initAudio(){try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return true}catch(e){return false}}
+function playMelodicAdzan(){
+    if(!initAudio())return;
+    const now=audioCtx.currentTime;
+    const notes=[{f:392,s:0,d:1.5},{f:440,s:0.3,d:1.2},{f:523.25,s:0.6,d:1.8},{f:587.33,s:1.0,d:1.5},{f:523.25,s:1.5,d:1.0},{f:440,s:2.0,d:1.2},{f:392,s:2.5,d:1.5},{f:349.23,s:3.0,d:1.0},{f:329.63,s:3.3,d:1.5},{f:293.66,s:3.8,d:2.0},{f:587.33,s:6.0,d:1.8},{f:659.25,s:6.5,d:1.5},{f:587.33,s:7.0,d:1.2},{f:523.25,s:7.5,d:1.8},{f:440,s:8.2,d:1.0},{f:392,s:8.8,d:1.5},{f:440,s:9.5,d:2.5},{f:523.25,s:12.5,d:2.0},{f:587.33,s:13.5,d:3.0}];
+    notes.forEach(n=>{
+        const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(n.f,now+n.s);
+        g.gain.setValueAtTime(0,now+n.s);g.gain.linearRampToValueAtTime(0.25,now+n.s+0.1);g.gain.linearRampToValueAtTime(0,now+n.s+n.d);
+        o.connect(g);g.connect(audioCtx.destination);o.start(now+n.s);o.stop(now+n.s+n.d);
+        const o2=audioCtx.createOscillator(),g2=audioCtx.createGain();o2.type='triangle';o2.frequency.setValueAtTime(n.f*2,now+n.s);
+        g2.gain.setValueAtTime(0,now+n.s);g2.gain.linearRampToValueAtTime(0.06,now+n.s+0.1);g2.gain.linearRampToValueAtTime(0,now+n.s+n.d);
+        o2.connect(g2);g2.connect(audioCtx.destination);o2.start(now+n.s);o2.stop(now+n.s+n.d);
+    });
+}
+function showNotification(txt){document.getElementById('notifText').textContent=txt;document.getElementById('notification').classList.add('show');setTimeout(()=>hideNotification(),15000)}
+function hideNotification(){document.getElementById('notification').classList.remove('show')}
+function createParticles(){const c=document.getElementById('particles');c.innerHTML='';for(let i=0;i<25;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(8+Math.random()*12)+'s';p.style.animationDelay=Math.random()*10+'s';const sz=2+Math.random()*3;p.style.width=sz+'px';p.style.height=sz+'px';c.appendChild(p)}}
+function getWIB(){const n=new Date(),u=n.getTime()+n.getTimezoneOffset()*60000;return new Date(u+7*3600000)}
+function pad(n){return n<10?'0'+n:''+n}
+function timeToMin(t){const[h,m]=t.split(':').map(Number);return h*60+m}
+
+function renderCards(){
+    const c=document.getElementById('prayerCards');c.innerHTML='';
+    prayerOrder.forEach(k=>{const p=prayerMeta[k];const d=document.createElement('div');d.className='prayer-card';d.dataset.prayer=k;d.innerHTML=`<div class="prayer-info"><div class="prayer-icon">${p.icon}</div><div><div class="prayer-name">${p.name}</div><div class="prayer-arabic">${p.arabic}</div></div></div><div class="prayer-time">${appState.times[k]}</div>`;c.appendChild(d)});
+}
+
+function updateClock(){
+    try {
+        const w=getWIB();
+        document.getElementById('currentTime').textContent=pad(w.getHours())+':'+pad(w.getMinutes());
+        document.getElementById('currentSeconds').textContent=pad(w.getSeconds());
+        const d=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'],m=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+        document.getElementById('date').textContent=`${d[w.getDay()]}, ${w.getDate()} ${m[w.getMonth()]} ${w.getFullYear()}`;
+        
+        const cur=w.getHours()*60+w.getMinutes();
+        let next=null, prevMin=0;
+        for(const k of prayerOrder){
+            const pm=timeToMin(appState.times[k]);
+            if(cur<pm && !next) next={k, name:prayerMeta[k].name, time:appState.times[k], min:pm};
+            if(cur>=pm) prevMin=pm;
+        }
+        if(!next) next={k:'subuh', name:'Subuh', time:appState.times.subuh, min:timeToMin(appState.times.subuh), tom:true};
+        
+        document.getElementById('nextPrayerName').textContent=next.name;
+        let target=new Date(w);const[th,tm]=next.time.split(':').map(Number);target.setHours(th,tm,0,0);
+        if(next.tom || target<=w) target.setDate(target.getDate()+1);
+        const diff=Math.max(0,target-w);
+        const h=Math.floor(diff/3600000),mi=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+        document.getElementById('countdown').innerHTML=`${pad(h)}<span class="separator">:</span>${pad(mi)}<span class="separator">:</span>${pad(s)}`;
+        
+        let dur=next.min-prevMin;if(dur<=0)dur=1440;
+        const el=(cur-prevMin+1440)%1440;
+        const prog=Math.max(0,Math.min(100,(el/dur)*100));
+        document.getElementById('progressRing').style.strokeDashoffset=301.593-(prog/100)*301.593;
+        document.getElementById('progressPercent').textContent=Math.round(100-prog)+'%';
+        
+        document.querySelectorAll('.prayer-card').forEach(c=>{
+            const pk=c.dataset.prayer;const badge=c.querySelector('.prayer-badge');if(badge)badge.remove();
+            if(pk===next.k){c.classList.add('active');const b=document.createElement('div');b.className='prayer-badge';b.textContent='BERIKUTNYA';c.querySelector('.prayer-name').after(b)}
+            else c.classList.remove('active');
+        });
+        
+        const nowSec=w.getSeconds();
+        for(const k of prayerOrder){
+            if(cur===timeToMin(appState.times[k]) && nowSec===0){
+                const tk=k+'-'+w.getDate();
+                if(appState.lastTriggered!==tk){appState.lastTriggered=tk;onPrayerTime(k)}
+            }
+        }
+    } catch(e){console.warn('Update clock error:',e)}
+}
+
+function onPrayerTime(k){
+    const m=prayerMeta[k];
+    showNotification(`🕌 ${m.name.toUpperCase()} - ${m.arabic} - Waktu sholat telah tiba!`);
+    if(initAudio())playMelodicAdzan();
+    if(navigator.vibrate)navigator.vibrate([200,100,200,100,400]);
+}
+
+async function fetchTimes(lat,lng,method){
+    document.getElementById('statusMsg').innerHTML='<span class="loading-spinner"></span> Memuat jadwal...';
+    try{
+        const controller=new AbortController();
+        const timeoutId=setTimeout(()=>controller.abort(),5000);
+        const res=await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=${method}`,{signal:controller.signal});
+        clearTimeout(timeoutId);
+        const data=await res.json();
+        if(data.code!==200)throw new Error('Invalid API response');
+        const t=data.data.timings;
+        appState.times={subuh:t.Fajr, syuruq:t.Sunrise, dzuhur:t.Dhuhr, ashar:t.Asr, maghrib:t.Maghrib, isya:t.Isha};
+        document.getElementById('statusMsg').textContent='✅ Jadwal berhasil diperbarui';
+        localStorage.setItem('prayerAppID',JSON.stringify(appState));
+        renderCards();updateClock();
+    }catch(e){
+        console.warn('Fetch failed:',e);
+        document.getElementById('statusMsg').textContent='⚠️ Gagal memuat. Menggunakan jadwal lokal.';
+    }
+}
+
+function openSettings(){
+    document.getElementById('modalOverlay').classList.add('active');
+    document.getElementById('citySelect').value=appState.city;
+    document.getElementById('methodSelect').value=appState.method;
+    document.getElementById('statusMsg').innerHTML='';
+}
+function closeSettings(){document.getElementById('modalOverlay').classList.remove('active')}
+
+document.getElementById('settingsBtn').onclick=openSettings;
+document.getElementById('locationBtn').onclick=openSettings;
+document.getElementById('cancelBtn').onclick=closeSettings;
+document.getElementById('modalOverlay').onclick=e=>{if(e.target===document.getElementById('modalOverlay'))closeSettings()};
+
+document.getElementById('saveBtn').onclick=async function(){
+    const selectedCity=document.getElementById('citySelect').value;
+    const selectedMethod=parseInt(document.getElementById('methodSelect').value);
+    if(!idCities[selectedCity]){document.getElementById('statusMsg').textContent='⚠️ Wilayah tidak ditemukan.';return}
+    
+    appState.city=selectedCity;
+    appState.method=selectedMethod;
+    const c=idCities[selectedCity];
+    
+    // Update UI location immediately
+    const label=document.getElementById('citySelect').selectedOptions[0].text;
+    document.getElementById('location').textContent=label.split(' (')[0];
+    
+    await fetchTimes(c.lat, c.lng, selectedMethod);
+    closeSettings();
+};
+
+document.getElementById('soundBtn').onclick=()=>{initAudio();playMelodicAdzan();showNotification('🔊 Test Suara Azan');setTimeout(hideNotification,5000)};
+
+function init(){
+    try{
+        const saved=localStorage.getItem('prayerAppID');
+        if(saved){
+            const parsed=JSON.parse(saved);
+            if(parsed.city && idCities[parsed.city]){
+                appState.city=parsed.city;
+                appState.method=parsed.method||20;
+                document.getElementById('location').textContent=parsed.city.charAt(0).toUpperCase()+parsed.city.slice(1);
+            }
+        }
+        createParticles();renderCards();updateClock();setInterval(updateClock,1000);
+        
+        // Auto fetch on load
+        const c=idCities[appState.city];
+        fetchTimes(c.lat, c.lng, appState.method);
+    }catch(e){console.error('Init error:',e)}
+    finally{
+        setTimeout(()=>document.getElementById('loading').classList.add('hidden'),2500);
+    }
+}
+
+document.addEventListener('click',function e(){initAudio();document.removeEventListener('click',e)},{once:true});
+document.addEventListener('touchstart',function e(){initAudio();document.removeEventListener('touchstart',e)},{once:true});
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>
