@@ -624,7 +624,7 @@ function showInstallOptions() {
 
   // PLAY STORE (GANTI LINK INI)
   document.getElementById('playstoreInstall').onclick = () => {
-    window.open('https://play.google.com/store/apps/details?id=github.qtok.twa', '_blank');
+    window.open('https://play.google.com/store/apps/details?id=io.quran.twa', '_blank');
   };
 
   // CLOSE
@@ -639,7 +639,7 @@ function showInstallOptions() {
 window.addEventListener('appinstalled', () => {
   isPWAInstalled = true;
   console.log('[PWA] App installed');
-  showToast('Terima kasih telah meng-install MERYSA! 💛');
+  showToast('Terima kasih telah meng-install QUR AN! 💛');
 
   const installBtn = document.getElementById('installBtn');
   if (installBtn) installBtn.remove();
