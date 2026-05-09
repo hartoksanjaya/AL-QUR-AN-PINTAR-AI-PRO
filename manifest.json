@@ -1,7 +1,7 @@
 {
   "name": "Al Quran Pintar",
   "short_name": "Al Quran",
-  "description": "Al Quran digital dengan, audio murottal, tafsir, dan fitur offline modern.",
+  "description": "Al Quran digital dengan audio murottal, tafsir, dan fitur offline modern.",
   "start_url": "./index.html",
   "scope": "/",
   "display": "standalone",
@@ -16,8 +16,8 @@
   "lang": "id-ID",
   "dir": "ltr",
   "categories": [
-    "entertainment",
-    "business",
+    "education",
+    "reference",
     "utilities"
   ],
   "prefer_related_applications": false,
@@ -55,4 +55,35 @@
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Baca Al Quran",
+      "short_name": "Baca",
+      "description": "Buka langsung ke halaman utama",
+      "url": "./index.html",
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }
