@@ -77,19 +77,36 @@
       "purpose": "maskable"
     }
   ],
-   
   "shortcuts": [
     {
       "name": "Al Quran Pintar",
       "short_name": "Al Quran",
       "description": "Al Quran digital dengan audio murottal, tafsir, dan fitur offline modern.",
       "url": "./index.html",
-      "icons": [
-        {
-          "src": "./icons/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
+      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshots/mobile-home.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Halaman Utama Baca Al Quran"
+    },
+    {
+      "src": "./screenshots/mobile-features.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Fitur Audio Murottal & Tafsir"
+    },
+    {
+      "src": "./screenshots/desktop-home.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Tampilan Desktop & Tablet"
     }
   ]
 }
