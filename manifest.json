@@ -1,40 +1,58 @@
 {
-  "id": "/",
-  "name": "Al Quran Pintar AI Pro",
-  "short_name": "Quran AI",
-  "description": "Al Quran digital dengan AI, audio murottal, tafsir, dan fitur offline modern.",
+  "name": "Al Quran Pintar",
+  "short_name": "Al Quran",
+  "description": "Al Quran digital dengan, audio murottal, tafsir, dan fitur offline modern.",
   "start_url": "./index.html",
-  "scope": "./",
+  "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
-  "orientation": "portrait",
-  "background_color": "#0f2027",
-  "theme_color": "#00c9a7",
-
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "lang": "id-ID",
+  "dir": "ltr",
+  "categories": [
+    "entertainment",
+    "business",
+    "utilities"
+  ],
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "./assets/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./assets/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "./assets/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./assets/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-
-  "screenshots": [
-    {
-      "src": "./assets/screen1.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "form_factor": "narrow"
-    }
-  ],
-
-  "categories": ["education", "lifestyle"],
-  "lang": "id-ID"
 }
