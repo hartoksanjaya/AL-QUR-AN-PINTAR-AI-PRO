@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.urang.padanglimau",
+        "sha256_cert_fingerprints": ["1C:75:13:31:BB:5A:73:ED:5F:02:87:AA:A9:0A:2B:EF:15:7F:71:F7:3E:2D:6C:C9:98:62:A2:FC:F9:2B:15:A5"]
+      }
+    }]
