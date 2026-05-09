@@ -79,11 +79,16 @@
   ],
   "shortcuts": [
     {
-      "name": "Baca Al Quran",
-      "short_name": "Baca",
-      "description": "Buka langsung ke halaman utama",
+      "name": "Al Quran Pintar",
+      "short_name": "Al Quran",
+      "description": "Al Quran digital dengan audio murottal, tafsir, dan fitur offline modern.",
       "url": "./index.html",
-      "icons": [{ "src": "./icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
